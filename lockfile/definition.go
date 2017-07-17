@@ -4,20 +4,18 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/blang/semver"
+	"github.com/coreos/go-semver/semver"
 )
 
 type Lock struct {
 	LockVersion    string                      `json:"lockfile_version"`
 	PackageName    string                      `json:"package_name"`
 	Meta           Metadata                    `json:"meta"`
-	PackageVersion string                      `json:"version"`
+	PackageVersion *semver.Version             `json:"version"`
 	Sources        map[string]string           `json:"sources"`
 	ContractTypes  map[string]ContractType     `json:"contract_type"`
 	Deployments    map[string]ContractInstance `json:"deployments"`
 	BuildDeps      map[string]string           `json:"build_dependencies"`
-
-	SemverVersion semver.Version
 }
 
 func (l Lock) validate() (err error) {
@@ -94,12 +92,12 @@ type LinkValue struct {
 
 type CompilerInfo struct {
 	Type     string           `json:"type"`
-	Version  string           `json:"version"`
+	Version  *semver.Version  `json:"version"`
 	Settings CompilerSettings `json:"settings"`
 }
 
 func (compiler CompilerInfo) validate() (err error) {
-	if compiler.Type != "solc" && compiler.Type != "solcjs" {
+	if compiler.Type != "solc" {
 		return fmt.Errorf("invalid compiler type selected: %v", compiler.Type)
 	}
 }

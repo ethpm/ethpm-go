@@ -19,12 +19,16 @@ func TestValidateCompilerInfo(t *testing.T) {
 			err:          "invalid compiler type selected: LLL",
 		},
 		{
-			compilerInfo: CompilerInfo{"solc"},
+			compilerInfo: CompilerInfo{"solc", "0.4.13", CompilerSettings{true, 500}},
+			err:          "",
+		},
+		{
+			compilerInfo: CompilerInfo{"solc", "nightly-0.4.14-f129372245d1b4fd4ff6425e9f7cbe701247cdc1", CompilerSettings{true, 500}},
 			err:          "",
 		},
 		{
 			compilerInfo: CompilerInfo{"solcjs"},
-			err:          "",
+			err:          "invalid compiler type selected: solcjs",
 		},
 	} {
 		err = test.compilerInfo.validate()
