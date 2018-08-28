@@ -1,7 +1,7 @@
 package manifest
 
-import "github.com/Hackdom/ethpm-go/pkg/ethabi"
-import "github.com/Hackdom/ethpm-go/pkg/natspec"
+import "github.com/ethpm/ethpm-go/pkg/ethabi"
+import "github.com/ethpm/ethpm-go/pkg/natspec"
 
 // ContractType Data for a contract type included in this package
 type ContractType struct {
