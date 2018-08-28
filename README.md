@@ -24,7 +24,7 @@ This repository abides by the standard layout [as defined here](https://github.c
 This repository uses [dep for dependency management](https://golang.github.io/dep/)
 
 # Packages
-There are three packages defined in the `pkg` directory with the primary package being `manifest`.
+There are three packages defined in the `pkg` directory with the primary package being `ethpmpackage`.
 
 ## ethpmpackage
 The primary manifest object is defined in packagemanifest.go. manifestinterface.go defines a basic interface for a manifest object with a Read and Write method. We define the v2 instance which implements this interface in v2.go.   
@@ -63,4 +63,4 @@ This package provides DevDoc, UserDoc, and DocUnion structs which correlate with
 This package provides an ABIObject which correlates with a compiler's abi output
 
 ## Notes
-No testing has been implemented yet, there is no regex or any checks in the read/write functions yet either. The ethpm-spec used is contained in the api folder. You can `go run main.go` in the `cmd/ethpm` folder to see the example output. Issues need to be opened to define functionality needed.
+No testing has been implemented yet, there is no regex or any checks in the read/write functions yet either. The ethpm-spec used is contained in the api folder. You can `go run cmd/ethpm/main.go` to see the example output. Issues need to be opened to define functionality needed.
