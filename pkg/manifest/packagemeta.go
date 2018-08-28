@@ -1,14 +1,10 @@
 package manifest
 
-type Link struct {
-	Resource string `json:"resource"`
-	Uri      string `json:"uri"`
-}
-
+// PackageMeta Metadata about the package
 type PackageMeta struct {
-	Authors     []string `json:"authors"`
-	License     string   `json:"license"`
-	Description string   `json:"description"`
-	Keywords    string   `json:"keywords"`
-	Links       []Link   `json:"links"`
+	Authors     []string          `json:"authors,omitempty"`
+	License     string            `json:"license,omitempty"`
+	Description string            `json:"description,omitempty"`
+	Keywords    string            `json:"keywords,omitempty"`
+	Links       map[string]string `json:"links,omitempty"`
 }

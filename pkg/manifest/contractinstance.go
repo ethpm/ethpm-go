@@ -1,10 +1,11 @@
 package manifest
 
+// ContractInstance Data for a deployed instance of a contract
 type ContractInstance struct {
-  ContractType    string          `json:"contractType"`
-  Address         string          `json:"address"`
-  Transaction     string          `json:"transaction"`
-  Block           string          `json:"block"`
-  RuntimeBytecode LinkedBytecode  `json:"runtimeBytecode"`
-  Compiler        Compiler        `json:"compiler"`
+	ContractType    string               `json:"contract_type"`
+	Address         string               `json:"address"`
+	Transaction     string               `json:"transaction,omitempty"`
+	Block           string               `json:"block,omitempty"`
+	RuntimeBytecode *LinkedBytecode      `json:"runtime_bytecode,omitempty"`
+	Compiler        *CompilerInformation `json:"compiler,omitempty"`
 }

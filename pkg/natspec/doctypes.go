@@ -1,5 +1,6 @@
 package natspec
 
+// DevDoc The output of an ethereum compiler's natspec developer documentation
 type DevDoc struct {
 	Author       string                       `json:"author"`
 	Title        string                       `json:"title"`
@@ -8,6 +9,7 @@ type DevDoc struct {
 	Construction []map[string]string          `json:"construction"`
 }
 
+// UserDoc The output of am ethereum compiler's natspec user documentation
 type UserDoc struct {
 	Source          string                       `json:"source"`
 	Language        string                       `json:"language"`
@@ -17,6 +19,7 @@ type UserDoc struct {
 	Construction    []map[string]string          `json:"construction"`
 }
 
+// DocUnion The union of devdoc and userdoc
 type DocUnion struct {
 	Author          string                       `json:"author"`
 	Title           string                       `json:"title"`
