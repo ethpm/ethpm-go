@@ -1,4 +1,4 @@
-package manifest
+package ethpmpackage
 
 import "encoding/json"
 

@@ -1,4 +1,4 @@
-package manifest
+package ethpmpackage
 
 // UnlinkedBytecode A bytecode object with the following key/value pairs.
 type UnlinkedBytecode struct {

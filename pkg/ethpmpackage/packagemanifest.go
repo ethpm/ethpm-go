@@ -1,4 +1,4 @@
-package manifest
+package ethpmpackage
 
 // PackageManifest EthPM Manifest Specification
 type PackageManifest struct {

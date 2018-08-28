@@ -1,4 +1,4 @@
-package manifest
+package ethpmpackage
 
 // ContractInstance Data for a deployed instance of a contract
 type ContractInstance struct {

@@ -1,4 +1,4 @@
-package manifest
+package ethpmpackage
 
 import "github.com/ethpm/ethpm-go/pkg/ethabi"
 import "github.com/ethpm/ethpm-go/pkg/natspec"

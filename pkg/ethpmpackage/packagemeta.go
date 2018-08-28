@@ -1,4 +1,4 @@
-package manifest
+package ethpmpackage
 
 // PackageMeta Metadata about the package
 type PackageMeta struct {

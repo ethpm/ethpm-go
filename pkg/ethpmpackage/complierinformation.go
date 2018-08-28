@@ -1,4 +1,4 @@
-package manifest
+package ethpmpackage
 
 // CompilerInformation Information about the software that was used to compile a contract type or instance
 type CompilerInformation struct {
