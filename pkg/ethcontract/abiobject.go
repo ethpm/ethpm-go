@@ -1,4 +1,4 @@
-package ethabi
+package ethcontract
 
 // InputOutput An object with an input or output name and its primitive type
 type InputOutput struct {

@@ -1,4 +1,4 @@
-package ethpmpackage
+package ethpm
 
 // PackageMeta Metadata about the package
 type PackageMeta struct {

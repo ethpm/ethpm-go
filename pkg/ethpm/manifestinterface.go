@@ -1,4 +1,4 @@
-package ethpmpackage
+package ethpm
 
 // ManifestInterface The interfacd for an ethpm manifest
 type ManifestInterface interface {

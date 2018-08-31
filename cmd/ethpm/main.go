@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"log"
 
-	pkg "github.com/ethpm/ethpm-go/pkg/ethpmpackage"
+	"github.com/ethpm/ethpm-go/pkg/ethpm"
 )
 
 func main() {
 	pm := `{"manifest_version":"2","package_name":"ArrayUtils","version":"1.2.7"}`
-	p := pkg.PackageManifest{}
+	p := ethpm.PackageManifest{}
 
 	if err := p.Read(pm); err != nil {
 		log.Fatal(err)

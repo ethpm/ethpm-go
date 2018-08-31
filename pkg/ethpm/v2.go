@@ -1,4 +1,4 @@
-package ethpmpackage
+package ethpm
 
 import "encoding/json"
 
