@@ -8,11 +8,11 @@ type InputOutput struct {
 
 // ABIObject An object that conforms to the ethereum abi schema
 type ABIObject struct {
-	Constant        bool          `json:"constant"`
-	Inputs          []InputOutput `json:"inputs"`
-	Name            string        `json:"name"`
-	Outputs         []InputOutput `json:"outputs"`
-	Payable         bool          `json:"payable"`
-	StateMutability string        `json:"stateMutability"`
-	Type            string        `json:"type"`
+	Constant        bool           `json:"constant"`
+	Inputs          []*InputOutput `json:"inputs"`
+	Name            string         `json:"name"`
+	Outputs         []*InputOutput `json:"outputs"`
+	Payable         bool           `json:"payable"`
+	StateMutability string         `json:"stateMutability"`
+	Type            string         `json:"type"`
 }
