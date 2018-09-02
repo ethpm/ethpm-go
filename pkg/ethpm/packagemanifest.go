@@ -7,6 +7,7 @@ import (
 	"regexp"
 
 	"github.com/ethpm/ethpm-go/pkg/ethcontract"
+	"github.com/ethpm/ethpm-go/pkg/ethregexlib"
 )
 
 // PackageManifest EthPM Manifest Specification
@@ -80,6 +81,23 @@ func (p *PackageManifest) CheckSources() (err error) {
 		if !matched {
 			err = fmt.Errorf("Invalid path for source key '%v'. Please make this a relative path in accordance "+
 				"with the spec found here https://ethpm.github.io/ethpm-spec/package-spec.html#sources-sources.", k)
+		}
+	}
+	return
+}
+
+func (p *PackageManifest) CheckContractTypes() (err error) {
+	for k, v := range p.ContractTypes {
+		if retErr := ethregexlib.CheckName(k); retErr != nil {
+			err = fmt.Errorf("contract_types key '%v' does not conform to the standard. Please see "+
+				"https://ethpm.github.io/ethpm-spec/glossary.html#term-contract-name "+
+				"for the spec", k)
+			break
+		}
+		if retErr := v.Validate(k); retErr != nil {
+			err = fmt.Errorf("contract_type with key '%v' returned the following error: "+
+				"%v+", k, retErr)
+			break
 		}
 	}
 	return

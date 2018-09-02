@@ -3,8 +3,8 @@ package bytecode
 import (
 	"errors"
 	"fmt"
-	"regexp"
 
+	"github.com/ethpm/ethpm-go/pkg/ethregexlib"
 	liblink "github.com/ethpm/ethpm-go/pkg/librarylink"
 )
 
@@ -21,42 +21,35 @@ type LinkedBytecode struct {
 	LinkDependencies []*liblink.LinkValue     `json:"link_dependencies,omitempty"`
 }
 
-// CheckUnlinkedBytecode ensures the string is a valid hexadecimal string
-func (ub *UnlinkedBytecode) CheckUnlinkedBytecode() (err error) {
-	re := regexp.MustCompile("^(0x|0X)[a-fA-F0-9]+$")
-	matched := re.MatchString(ub.Bytecode)
-	if !matched {
-		err = errors.New("field 'bytecode' does not conform to a hexadecimal string")
-	} else if (len(ub.Bytecode) % 2) != 0 {
-		err = fmt.Errorf("field 'bytecode' is not valid, the string does not contain 2 "+
-			"characters per byte, length is showing '%v'", len(ub.Bytecode))
+// Validate ensures the UnlinkedBytecode object conforms to the standard
+// described here https://ethpm.github.io/ethpm-spec/package-spec.html#bytecode
+func (ub *UnlinkedBytecode) Validate() (err error) {
+	if (ub.Bytecode == "") || (ub.Bytecode == "0x") {
+		err = errors.New("bytecode empty and is a required field")
+		return
+	}
+	if retErr := ethregexlib.CheckBytecode(ub.Bytecode); retErr != nil {
+		err = fmt.Errorf("unlinked_bytecode:bytecode error '%v'", retErr)
+		return
+	}
+	if retErr := checkLinkReferences(ub.Bytecode, ub.LinkReferences); retErr != nil {
+		err = retErr
 	}
 	return
 }
 
-// CheckLinkReferencesUnlinked validates each of the link references against the bytecode
-func (ub *UnlinkedBytecode) CheckLinkReferencesUnlinked() (err error) {
-	if err = ub.CheckUnlinkedBytecode(); err != nil {
-		return
-	}
-	length := len(ub.Bytecode)
+// checkLinkReferences validates each of the link references against the bytecode
+func checkLinkReferences(bc string, lr []*liblink.LinkReference) (err error) {
+	length := len(bc)
 OuterLoop:
-	for k, v := range ub.LinkReferences {
-		if retErr := v.CheckName(); retErr != nil {
-			err = fmt.Errorf("link_reference at position '%v' returned the following error: "+
-				"%v+", k, retErr)
-			break
-		} else if retErr := v.CheckUniqueOffsets(); retErr != nil {
+	for k, v := range lr {
+		if retErr := v.Validate(); retErr != nil {
 			err = fmt.Errorf("link_reference at position '%v' returned the following error: "+
 				"%v+", k, retErr)
 			break
 		}
 		for i, z := range v.Offsets {
-			if z >= ((length - 2) / 2) {
-				err = fmt.Errorf("link_reference at position '%v' has invalid offset at postion "+
-					"%v. Value '%v' is out of bounds for the bytecode.", k, i, z)
-				break OuterLoop
-			} else if (z + v.Length) >= ((length - 2) / 2) {
+			if (z + v.Length) >= ((length - 2) / 2) {
 				err = fmt.Errorf("link_reference at position '%v' has invalid length for offset "+
 					"at postion %v. Offset '%v' plus '%v' is out of bounds for the bytecode.", k, i, z, v.Length)
 				break OuterLoop
@@ -66,6 +59,7 @@ OuterLoop:
 	return
 }
 
+/*
 // CheckLinkedBytecode ensures the string is a valid hexadecimal string
 func (lb *LinkedBytecode) CheckLinkedBytecode() (err error) {
 	re := regexp.MustCompile("^(0x|0X)?[a-fA-F0-9]+$")
@@ -126,7 +120,7 @@ func (lb *LinkedBytecode) CheckLinkDependencies() (err error) {
 				"%v+", k, retErr)
 			break
 		}
-		/***STOPPED HERE!!!***/
+		/***STOPPED HERE!!!
 	}
 	return
-}
+}*/
