@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	pm := `{"manifest_version":"2","package_name":"ArrayUtils","version":"1.2.7"}`
+	pm := `{"manifest_version":"2","package_name":"array-utils","version":"1.2.7"}`
 	p := ethpm.PackageManifest{}
 
 	if err := p.Read(pm); err != nil {
