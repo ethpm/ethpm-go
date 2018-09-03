@@ -5,104 +5,50 @@ import (
 	"testing"
 )
 
-func TestCheckManifestVerison(t *testing.T) {
+func TestManifestValidate(t *testing.T) {
 	var want error
 	var got error
 	p := PackageManifest{}
 
 	p.ManifestVersion = "2"
-	got = p.CheckManifestVersion()
-	if got != nil {
-		t.Fatalf("Got '%v', expected nil", got)
+	got = p.Validate()
+	want = errors.New("PackageManifest:package_name returned error 'must provide a package name'")
+	if got.Error() != want.Error() {
+		t.Fatalf("Got '%v', expected '%v'", got, want)
 	}
 
+	p.PackageName = "alexs-package"
 	p.ManifestVersion = " 2"
-	got = p.CheckManifestVersion()
-	want = errors.New("manifest_version should be 2, manifest_version is showing  2. Ensure there are no extra spaces or characters")
+	got = p.Validate()
+	want = errors.New("PackageManifest:manifest_version returned error 'manifest_version " +
+		"should be 2, manifest_version is showing  2. Ensure there are no extra spaces or characters'")
 	if got.Error() != want.Error() {
 		t.Fatalf("Got '%v', expected '%v'", got, want)
 	}
 
 	p.ManifestVersion = "2 "
-	got = p.CheckManifestVersion()
-	want = errors.New("manifest_version should be 2, manifest_version is showing 2 . Ensure there are no extra spaces or characters")
-	if got.Error() != want.Error() {
-		t.Fatalf("Got '%v', expected '%v'", got, want)
-	}
-}
-
-func TestCheckPackageName(t *testing.T) {
-	var want error
-	var got error
-	p := PackageManifest{}
-
-	p.PackageName = "H"
-	got = p.CheckPackageName()
-	want = errors.New("package_name does not conform to the standard. Please see " +
-		"https://ethpm.github.io/ethpm-spec/package-spec.html#package-name-package-name " +
-		"for the spec")
+	got = p.Validate()
+	want = errors.New("PackageManifest:manifest_version returned error 'manifest_version " +
+		"should be 2, manifest_version is showing 2 . Ensure there are no extra spaces or characters'")
 	if got.Error() != want.Error() {
 		t.Fatalf("Got '%v', expected '%v'", got, want)
 	}
 
-	p.PackageName = "2"
-	got = p.CheckPackageName()
-	want = errors.New("package_name does not conform to the standard. Please see " +
-		"https://ethpm.github.io/ethpm-spec/package-spec.html#package-name-package-name " +
-		"for the spec")
+	p.ManifestVersion = "2"
+	got = p.Validate()
+	want = errors.New("PackageManifest:version returned error 'must provide a version number'")
 	if got.Error() != want.Error() {
 		t.Fatalf("Got '%v', expected '%v'", got, want)
 	}
 
-	p.PackageName = "hello-Me"
-	got = p.CheckPackageName()
-	want = errors.New("package_name does not conform to the standard. Please see " +
-		"https://ethpm.github.io/ethpm-spec/package-spec.html#package-name-package-name " +
-		"for the spec")
-	if got.Error() != want.Error() {
-		t.Fatalf("Got '%v', expected '%v'", got, want)
-	}
-
-	p.PackageName = "hello-piper"
-	got = p.CheckPackageName()
+	p.Version = "1.0.0"
+	got = p.Validate()
 	if got != nil {
-		t.Fatalf("Got '%v', expected <nil>", got)
+		t.Fatalf("Got '%v', expected '<nil>'", got)
 	}
 }
 
-func TestCheckVersion(t *testing.T) {
-	var want error
-	var got error
-	p := PackageManifest{}
-
-	p.Version = "H"
-	got = p.CheckVersion()
-	want = errors.New("version does not conform to semver. Please check your package version string")
-	if got.Error() != want.Error() {
-		t.Fatalf("Got '%v', expected '%v'", got, want)
-	}
-
-	p.Version = "0.1.0-*"
-	got = p.CheckVersion()
-	want = errors.New("version does not conform to semver. Please check your package version string")
-	if got.Error() != want.Error() {
-		t.Fatalf("Got '%v', expected '%v'", got, want)
-	}
-
-	p.Version = " 0"
-	got = p.CheckVersion()
-	want = errors.New("version does not conform to semver. Please check your package version string")
-	if got.Error() != want.Error() {
-		t.Fatalf("Got '%v', expected '%v'", got, want)
-	}
-
-	p.Version = "2.0.1-beta"
-	got = p.CheckVersion()
-	if got != nil {
-		t.Fatalf("Got '%v', expected <nil>", got)
-	}
-}
-
+/*
 func TestCheckSources(t *testing.T) {
 	var want error
 	var got error
@@ -132,4 +78,4 @@ func TestCheckSources(t *testing.T) {
 	if got != nil {
 		t.Fatalf("Got '%v', expected '<nil>'", got)
 	}
-}
+}*/
