@@ -17,8 +17,8 @@ type UnlinkedBytecode struct {
 // LinkedBytecode A bytecode object with the following key/value pairs.
 type LinkedBytecode struct {
 	Bytecode         string                   `json:"bytecode,omitempty"`
-	LinkReferences   []*liblink.LinkReference `json:"link_references,omitempty"`
 	LinkDependencies []*liblink.LinkValue     `json:"link_dependencies,omitempty"`
+	LinkReferences   []*liblink.LinkReference `json:"link_references,omitempty"`
 }
 
 // Validate with UnlinkedBytecode ensures the UnlinkedBytecode object conforms to the standard

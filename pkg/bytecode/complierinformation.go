@@ -11,8 +11,8 @@ import (
 // a contract type or instance
 type CompilerInformation struct {
 	Name     string      `json:"name"`
-	Version  string      `json:"version"`
 	Settings interface{} `json:"settings,omitempty"`
+	Version  string      `json:"version"`
 }
 
 // Validate ensures ContractType conforms to the standard defined here
