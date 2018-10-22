@@ -1,6 +1,6 @@
 ethpm-go
 =========================
-A go package which provides an EthPM v2 package manifest reader and writer
+A go package which provides an [EthPM v2 package manifest](https://github.com/ethpm/ethpm-spec) reader and writer
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -9,11 +9,8 @@ A go package which provides an EthPM v2 package manifest reader and writer
 - [Layout](#layout)
 - [Tools](#tools)
 - [Packages](#packages)
-  - [ethpmpackage](#ethpmpackage)
-    - [Usage](#usage)
-  - [natspec](#natspec)
-  - [ethabi](#ethabi)
-  - [Notes](#notes)
+- [Usage](#usage)
+- [Notes](#notes)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -21,27 +18,38 @@ A go package which provides an EthPM v2 package manifest reader and writer
 This repository abides by the standard layout [as defined here](https://github.com/golang-standards/project-layout)
 
 # Tools
-This repository uses [dep for dependency management](https://golang.github.io/dep/)
+This repository uses:  
+* [dep for dependency management](https://golang.github.io/dep/)
+* [gitflow for branch workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)  
 
 # Packages
-There are three packages defined in the `pkg` directory with the primary package being `ethpmpackage`.
+There are ten packages defined in the `pkg` directory with the primary package being `ethpm`.   
 
-## ethpmpackage
-The primary manifest object is defined in packagemanifest.go. manifestinterface.go defines a basic interface for a manifest object with a Read and Write method. We define the v2 instance which implements this interface in v2.go.   
+* ethpm - https://godoc.org/github.com/ethpm/ethpm-go/pkg/ethpm   
+* bytecode - https://godoc.org/github.com/ethpm/ethpm-go/pkg/bytecode   
+* ethcontract - https://godoc.org/github.com/ethpm/ethpm-go/pkg/ethcontract   
+* librarylink - https://godoc.org/github.com/ethpm/ethpm-go/pkg/librarylink   
+* natspec - https://godoc.org/github.com/ethpm/ethpm-go/pkg/natspec   
+* packageregistry - https://godoc.org/github.com/ethpm/ethpm-go/pkg/packageregistry   
+* solcutils - https://godoc.org/github.com/ethpm/ethpm-go/pkg/solcutils   
+* gethutils - https://godoc.org/github.com/ethpm/ethpm-go/pkg/gethutils   
+* githubutils - https://godoc.org/github.com/ethpm/ethpm-go/pkg/githubutils   
+* ethregexlib - https://godoc.org/github.com/ethpm/ethpm-go/pkg/ethregexlib   
 
-### Usage
+# Usage
 ```go
 package main
 
 import (
-  pkg "github.com/ethpm/ethpm-go/pkg/ethpmpackage"
-  "fmt"
-  "log"
+	"fmt"
+	"log"
+
+	"github.com/ethpm/ethpm-go/pkg/ethpm"
 )
 
 func main()  {
-  pm := `{"manifest_version":"2","package_name":"ArrayUtils","version":"1.2.7"}`
-  p := pkg.PackageManifest{}
+  pm := `{"manifest_version":"2","package_name":"array-utils","version":"1.2.7"}`
+  p := ethpm.PackageManifest{}
 
   if err := p.Read(pm); err != nil {
     log.Fatal(err)
@@ -56,11 +64,5 @@ func main()  {
 }
 ```
 
-## natspec
-This package provides DevDoc, UserDoc, and DocUnion structs which correlate with natspec output
-
-## ethabi
-This package provides an ABIObject which correlates with a compiler's abi output
-
-## Notes
-No testing has been implemented yet, there is no regex or any checks in the read/write functions yet either. The ethpm-spec used is contained in the api folder. You can `go run cmd/ethpm/main.go` to see the example output. Issues need to be opened to define functionality needed.
+# Notes
+This is v0.0.1 and should be treated as such. Contributions are welcome as well as any issues identified while using this code. While some of the on-chain functionality has been lightly tested, many of the full compilation, deployment, and publishing workflows have not been fully developed nor tested just yet.
