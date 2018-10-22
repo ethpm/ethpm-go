@@ -2,8 +2,26 @@ package ethpm
 
 import (
 	"errors"
+	"fmt"
 	"testing"
 )
+
+func TestSetAuthors(t *testing.T) {
+	p := PackageMeta{}
+	p.SetAuthors("test", "me")
+	got := p.Authors[0]
+	want := "test"
+	if got != want {
+		t.Fatalf("Got '%v', expected '%v'", got, want)
+	}
+}
+
+func ExamplePackageMeta_SetAuthors() {
+	p := PackageMeta{}
+	p.SetAuthors("Joshua", "Hannan")
+	fmt.Println(p.Authors[0])
+	// Output: Joshua
+}
 
 func TestMetaValidate(t *testing.T) {
 	var want error
@@ -27,5 +45,4 @@ func TestMetaValidate(t *testing.T) {
 	if got != nil {
 		t.Fatalf("Got '%v', expected <nil>", got)
 	}
-
 }

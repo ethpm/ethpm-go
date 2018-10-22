@@ -18,6 +18,21 @@ type ContractInstance struct {
 	Transaction     string                  `json:"transaction,omitempty"`
 }
 
+// Build takes a DeployedContractInfo object and creates a ContractInstance
+// object. This function is not currently built into any compiler or deployment
+// workflow.
+func (ci *ContractInstance) Build(i *DeployedContractInfo) {
+	ci.Address = i.Address
+	ci.Block = i.Block
+	ci.ContractType = i.ContractName
+	ci.Transaction = i.Transaction
+	ci.Compiler = i.CT.Compiler
+	ci.RuntimeBytecode = &bc.LinkedBytecode{}
+	ci.RuntimeBytecode.Build(i.BC)
+	ci.RuntimeBytecode.AddLinkReference(i.LR)
+	ci.RuntimeBytecode.AddLinkDependencies(i.LV)
+}
+
 // Validate ensures ContractInstance conforms to the standard defined here
 // https://ethpm.github.io/ethpm-spec/package-spec.html#the-contract-instance-object
 func (ci *ContractInstance) Validate(name string, dependencyLengths map[string]int) (err error) {

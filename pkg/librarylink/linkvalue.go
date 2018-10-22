@@ -15,6 +15,15 @@ type LinkValue struct {
 	Value   string `json:"value"`
 }
 
+// Build Takes a name for the linked contract, as well as the offset array for
+// this contract, and builds the LinkValue struct
+func (l *LinkValue) Build(typeofvalue string, value string, offsets []int) {
+	l.Type = typeofvalue
+	l.Value = value
+	l.Offsets = offsets
+	return
+}
+
 // Validate ensures the LinkValue struct conforms to the standard found
 // here https://ethpm.github.io/ethpm-spec/package-spec.html#the-link-value-object
 func (l *LinkValue) Validate(depLengths map[string]int) (err error) {

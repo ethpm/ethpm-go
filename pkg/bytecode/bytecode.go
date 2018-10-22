@@ -1,24 +1,91 @@
+/*
+The MIT License (MIT)
+https://github.com/ethpm/ethpm-go/blob/master/LICENSE
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+/*
+Package bytecode provides requisite structs and utility functions to build and
+validate unlinked and unlinked bytecode objects for the ethpm v2 manifest. Information
+about these objects can be found here http://ethpm.github.io/ethpm-spec/package-spec.html#the-bytecode-object
+*/
 package bytecode
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/ethpm/ethpm-go/pkg/ethregexlib"
 	liblink "github.com/ethpm/ethpm-go/pkg/librarylink"
 )
 
-// UnlinkedBytecode A bytecode object with the following key/value pairs.
+// StandardJSONBC is the bytecode or deployedBytecode object from a compiler's
+// standard JSON output object
+type StandardJSONBC struct {
+	LinkReferences map[string]map[string][]map[string]int `json:"linkReferences,omitempty"`
+	Object         string                                 `json:"object,omitempty"`
+}
+
+// UnlinkedBytecode A bytecode object for unlinked bytecode.
 type UnlinkedBytecode struct {
 	Bytecode       string                   `json:"bytecode,omitempty"`
 	LinkReferences []*liblink.LinkReference `json:"link_references,omitempty"`
 }
 
-// LinkedBytecode A bytecode object with the following key/value pairs.
+// LinkedBytecode A bytecode object for linked bytecode
 type LinkedBytecode struct {
 	Bytecode         string                   `json:"bytecode,omitempty"`
 	LinkDependencies []*liblink.LinkValue     `json:"link_dependencies,omitempty"`
 	LinkReferences   []*liblink.LinkReference `json:"link_references,omitempty"`
+}
+
+// Build takes a compiler standard output bytecode object as a json string
+// and builds the UnlinkedBytecode struct
+func (ub *UnlinkedBytecode) Build(jsonstring string) (err error) {
+	var s *StandardJSONBC
+	var contractcount int
+	if err = json.Unmarshal([]byte(jsonstring), &s); err != nil {
+		err = fmt.Errorf("Error parsing standard json bytecode object: '%v'", err)
+		return
+	}
+	if s == nil {
+		err = errors.New("No unlinked bytecode received in json string")
+		return
+	}
+	for k := range s.LinkReferences {
+		contractcount += len(s.LinkReferences[k])
+	}
+	ub.LinkReferences = make([]*liblink.LinkReference, contractcount)
+	contractcount = 0
+	for k := range s.LinkReferences {
+		for z, v := range s.LinkReferences[k] {
+			ub.LinkReferences[contractcount] = &liblink.LinkReference{}
+			ub.LinkReferences[contractcount].Build(z, v)
+			s.Object = addLinkRefZeros(s.Object, ub.LinkReferences[contractcount])
+			contractcount++
+		}
+	}
+	ub.Bytecode = s.Object
+	return
+}
+
+func addLinkRefZeros(bytecode string, lr *liblink.LinkReference) string {
+	l := lr.Length * 2
+	zeros := strings.Repeat("0", l)
+	for _, x := range lr.Offsets {
+		spot := x * 2
+		bytecode = bytecode[:spot] + zeros + bytecode[spot+l:]
+	}
+	return bytecode
 }
 
 // Validate with UnlinkedBytecode ensures the UnlinkedBytecode object conforms to the standard
@@ -34,6 +101,40 @@ func (ub *UnlinkedBytecode) Validate() (err error) {
 	}
 	if retErr := checkLinkReferences(ub.Bytecode, ub.LinkReferences); retErr != nil {
 		err = retErr
+	}
+	return
+}
+
+// Build the linked bytecode string and create a LinkedBytecode struct. Each
+// dependency and reference for LinkedBytecode should be added through the
+// AddLinkDependencies and AddLinkReference utility functions.
+func (lb *LinkedBytecode) Build(bc string) (err error) {
+	lb.Bytecode = bc
+	return
+}
+
+// AddLinkDependencies will take an array of LinkValue objects and add them
+// to the LinkedBytecode object. This function is not currently built into
+// any compiler or deployment workflow.
+func (lb *LinkedBytecode) AddLinkDependencies(lv []*liblink.LinkValue) {
+	if len(lb.LinkDependencies) == 0 {
+		lb.LinkDependencies = make([]*liblink.LinkValue, len(lv))
+	}
+	for i, v := range lv {
+		lb.LinkDependencies[i] = v
+	}
+	return
+}
+
+// AddLinkReference will take an array of LinkReference objects and add them
+// to the LinkedBytecode object. This function is not currently built into
+// any compiler or deployment workflow.
+func (lb *LinkedBytecode) AddLinkReference(lr []*liblink.LinkReference) {
+	if len(lb.LinkReferences) == 0 {
+		lb.LinkReferences = make([]*liblink.LinkReference, len(lr))
+	}
+	for i, v := range lr {
+		lb.LinkReferences[i] = v
 	}
 	return
 }

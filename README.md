@@ -9,12 +9,7 @@ A go package which provides an [EthPM v2 package manifest](https://github.com/et
 - [Layout](#layout)
 - [Tools](#tools)
 - [Packages](#packages)
-  - [ethpm](#ethpm)
-    - [Usage](#usage)
-  - [natspec](#natspec)
-  - [librarylink](#librarylink)
-  - [ethcontract](#ethcontract)
-  - [ethregexlib](#ethregexlib)
+- [Usage](#usage)
 - [Notes](#notes)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -28,12 +23,20 @@ This repository uses:
 * [gitflow for branch workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)  
 
 # Packages
-There are six packages defined in the `pkg` directory with the primary package being `ethpm`.
+There are ten packages defined in the `pkg` directory with the primary package being `ethpm`.   
 
-## ethpm
-The primary manifest object is defined in `packagemanifest.go`. `manifestinterface.go` defines a basic interface for a manifest object with a Read and Write method. We define the v2 instance which implements this interface in `v2.go`.   
+* ethpm - https://godoc.org/github.com/ethpm/ethpm-go/pkg/ethpm   
+* bytecode - https://godoc.org/github.com/ethpm/ethpm-go/pkg/bytecode   
+* ethcontract - https://godoc.org/github.com/ethpm/ethpm-go/pkg/ethcontract   
+* librarylink - https://godoc.org/github.com/ethpm/ethpm-go/pkg/librarylink   
+* natspec - https://godoc.org/github.com/ethpm/ethpm-go/pkg/natspec   
+* packageregistry - https://godoc.org/github.com/ethpm/ethpm-go/pkg/packageregistry   
+* solcutils - https://godoc.org/github.com/ethpm/ethpm-go/pkg/solcutils   
+* gethutils - https://godoc.org/github.com/ethpm/ethpm-go/pkg/gethutils   
+* githubutils - https://godoc.org/github.com/ethpm/ethpm-go/pkg/githubutils   
+* ethregexlib - https://godoc.org/github.com/ethpm/ethpm-go/pkg/ethregexlib   
 
-### Usage
+# Usage
 ```go
 package main
 
@@ -61,17 +64,5 @@ func main()  {
 }
 ```
 
-## natspec
-This package provides DevDoc, UserDoc, and DocUnion structs which correlate with natspec output
-
-## librarylink
-This provides the `LinkReference` and `LinkValue` structs which describe bytecode linking locations.
-
-## ethcontract
-This package provides `ABIObject`, which correlates with a compiler's abi output, as well as `ContractInstance` and `ContractType` which follows the EthPM v2 spec for these objects.
-
-## ethregexlib
-This package provides various regex utility functions that are relevant to ethpm and Ethereum in general.
-
 # Notes
-No testing has been implemented yet, there is no regex or any checks in the read/write functions yet either. The ethpm-spec used is contained in the api folder. You can `go run cmd/ethpm/main.go` to see the example output. Issues need to be opened to define functionality needed.
+This is v0.0.1 and should be treated as such. Contributions are welcome as well as any issues identified while using this code. While some of the on-chain functionality has been lightly tested, many of the full compilation, deployment, and publishing workflows have not been fully developed nor tested just yet.
